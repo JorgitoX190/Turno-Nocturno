@@ -8,25 +8,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:	
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           lfs: true
+
       - name: Active Cache
-        uses: actions/cache@v1.1.0
+        uses: actions/cache@v4
         with:
           path: Library
-          key: Library
-           
-                
+          key: Library-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}
+          restore-keys: |
+            Library-
+
       - name: Unity - Builder
-        uses: game-ci/unity-builder@v2.0-aplha-5
+        uses: game-ci/unity-builder@v4
         with:
           unityVersion: 2020.2.1f1
           targetPlatform: StandaloneWindows64
-          kubeVolumeSize: 8Gi
-      
+          # Nota: 'kubeVolumeSize' no suele ser necesario en runners estándar de GitHub
+          
       - name: Upload Build
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
-          name: Build
+          name: Build-Windows
           path: build
