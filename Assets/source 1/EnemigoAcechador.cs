@@ -3,19 +3,19 @@ using UnityEngine.AI;
 
 public class EnemigoAcechador : MonoBehaviour
 {
-    [Header("Configuraci�n de Movimiento")]
+    [Header("Configuración de Movimiento")]
     public Transform jugador; 
     public float distanciaObservacion = 8f; 
 
-    [Header("Configuraci�n de Locura")]
+    [Header("Configuración de Locura")]
     public float radioLocura = 10f; // Distancia a la que empieza a afectar la cordura
-    public float danoPorSegundo = 5f; // Cu�nta cordura te quita por segundo
+    public float danoPorSegundo = 5f; // Cuánta cordura te quita por segundo
 
-    [Header("Animaci�n")]
+    [Header("Animación")]
     public Animator animador; 
 
     private NavMeshAgent agente;
-    private SistemaCordura corduraJugador; // Referencia al nuevo script de tu personaje
+    private SistemaCordura corduraJugador; 
 
     void Start()
     {
@@ -26,7 +26,6 @@ public class EnemigoAcechador : MonoBehaviour
             animador = GetComponent<Animator>();
         }
 
-        // Al iniciar, el enemigo busca el script de cordura dentro de tu jugador
         if (jugador != null)
         {
             corduraJugador = jugador.GetComponent<SistemaCordura>();
@@ -39,7 +38,7 @@ public class EnemigoAcechador : MonoBehaviour
 
         float distanciaAlJugador = Vector3.Distance(transform.position, jugador.position);
 
-        // --- L�GICA DE MOVIMIENTO ---
+        // --- LÓGICA DE MOVIMIENTO ---
         if (distanciaAlJugador > distanciaObservacion)
         {
             agente.isStopped = false;
@@ -55,12 +54,18 @@ public class EnemigoAcechador : MonoBehaviour
             if (animador != null) animador.SetBool("Caminando", false);
         }
 
-        // --- L�GICA DE CORDURA (NUEVO) ---
-        // Si el jugador entra en el aura de locura del enemigo...
+        // --- LÓGICA DE DAÑO A LA CORDURA ---
         if (distanciaAlJugador <= radioLocura && corduraJugador != null)
         {
-            // Le mandamos un n�mero negativo para restarle a la barra progresivamente
-            corduraJugador.ModificarCordura(-danoPorSegundo * Time.deltaTime);
+            // Calculamos un factor multiplicador: si el enemigo está rozando a Ángel, el daño es mayor
+            float factorProximidad = 1f - (distanciaAlJugador / radioLocura);
+            factorProximidad = Mathf.Clamp01(factorProximidad); 
+
+            // Daño progresivo: a menor distancia, más pánico sufre Ángel
+            float danoFinal = danoPorSegundo * (1f + factorProximidad);
+
+            // Se envía el daño al script del jugador
+            corduraJugador.ModificarCordura(-danoFinal * Time.deltaTime);
         }
     }
 }

@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Rendering; // ¡NUEVO! Necesario para modificar los efectos de cámara
+using UnityEngine.Rendering; // ï¿½NUEVO! Necesario para modificar los efectos de cï¿½mara
 
 public class SistemaCordura : MonoBehaviour
 {
-    [Header("Configuración")]
+    [Header("Configuraciï¿½n")]
     public float corduraMaxima = 100f;
     public float corduraActual;
 
@@ -12,7 +12,7 @@ public class SistemaCordura : MonoBehaviour
     public Slider barraCorduraUI;
 
     [Header("Efectos Visuales")]
-    public Volume volumenLocura; // Aquí arrastraremos nuestro Global Volume
+    public Volume volumenLocura; // Aquï¿½ arrastraremos nuestro Global Volume
 
     void Start()
     {
@@ -35,11 +35,11 @@ public class SistemaCordura : MonoBehaviour
             barraCorduraUI.value = corduraActual;
         }
 
-        // 2. Actualizamos la distorsión de la cámara
+        // 2. Actualizamos la distorsiï¿½n de la cï¿½mara
         if (volumenLocura != null)
         {
-            // Calculamos qué tan "locos" estamos (un número de 0 a 1)
-            // Si la cordura está al 100, la locura es 0. Si la cordura es 0, la locura es 1.
+            // Calculamos quï¿½ tan "locos" estamos (un nï¿½mero de 0 a 1)
+            // Si la cordura estï¿½ al 100, la locura es 0. Si la cordura es 0, la locura es 1.
             float porcentajeLocura = 1f - (corduraActual / corduraMaxima);
             
             // Le aplicamos ese porcentaje al Peso (Weight) del filtro visual
